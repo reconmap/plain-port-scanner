@@ -1,7 +1,4 @@
 #!/bin/bash
 
-aclocal &&
-	autoconf &&
-	automake --add-missing --copy &&
-	./configure
+aclocal && autoconf && automake --add-missing --copy
 
