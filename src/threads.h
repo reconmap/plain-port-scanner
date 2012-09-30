@@ -26,6 +26,7 @@ struct ThreadArg
 {
 	struct hostent *hostInfo;
 	unsigned short port;
+	unsigned char printFormat;
 	AppConfig *appConfig;
 };
 

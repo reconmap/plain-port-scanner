@@ -31,19 +31,20 @@ void AppConfig_init( AppConfig *appConfig )
 	appConfig->toPort = 80;
 	appConfig->numThreads = 5;
 	appConfig->showOnlyOpen = 0;
+	appConfig->printFormat = FORMAT_OPEN_CLOSED;
 }
 
 void AppConfig_setHostName( AppConfig *appConfig, char *hostName )
 {
 	memset( &appConfig->hostName, '\0', 255 );
-	strcat( appConfig->hostName, hostName );
+	strncat( appConfig->hostName, hostName, 254 );
 }
 
 void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 {
 	int opt = -1;
 
-	while( ( opt = getopt( argc, argv, "f:t:h:o" ) ) != -1 )
+	while( ( opt = getopt( argc, argv, "f:t:h:op:" ) ) != -1 )
 	{
 		switch( opt )
 		{
@@ -59,6 +60,13 @@ void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 			case 'o':
 				appConfig->showOnlyOpen = 1;
 				break;
+			case 'p':
+				if( 0 == strncmp( optarg, "pluses-minuses", 14 ) )
+				{
+					appConfig->printFormat = FORMAT_PLUSES_MINUSES;
+				}
+				break;
+
 		}
 	}	
 }

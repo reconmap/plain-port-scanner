@@ -23,6 +23,12 @@
 #include <strings.h>
 #include <unistd.h>
 
+enum
+{
+	FORMAT_OPEN_CLOSED,
+	FORMAT_PLUSES_MINUSES
+};
+
 struct _AppConfig
 {
 	char hostName[255];
@@ -30,6 +36,7 @@ struct _AppConfig
 	unsigned short toPort;
 	unsigned char numThreads;
 	unsigned char showOnlyOpen;
+	unsigned char printFormat;
 };
 
 typedef struct _AppConfig AppConfig;

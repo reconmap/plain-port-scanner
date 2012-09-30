@@ -19,18 +19,34 @@
 #include "colors.h"
 #include "network.h"
 
+void printPlusesMinuses( char isOpen, short port )
+{
+	printf( "%c%u\n", ( isOpen? '+': '-' ), port );
+}
+
+void printOpenClosed( char isOpen, short port )
+{
+	printf( "Port %d is %s%s%s\n", 
+		port,
+		Color_getString( 1, 37, ( isOpen? 42: 41 ) ),
+		( isOpen? "OPEN": "CLOSED" ),
+		COLOR_RESET_STRING
+	);
+}
+
 void *threadRun( void *arg )
 {
 	struct ThreadArg *threadArg = (struct ThreadArg *)arg;
 	char portStatus = checkPortStatus( threadArg->hostInfo, threadArg->port );
+	void **( *printFunction )( char, short ) = printOpenClosed(char, short);
+	if( FORMAT_PLUSES_MINUSES == threadArg->printFormat )
+	{
+		( printFunction ) = &printPlusesMinuses;
+	}
 	if( portStatus == PortStatus_Open || threadArg->appConfig->showOnlyOpen == 0 )
 	{
-		printf( "Port %d is %s%s%s\n", 
-			threadArg->port,
-			Color_getString( 1, 37, ( PortStatus_Closed == portStatus  ? 41 : 42 ) ),
-			( PortStatus_Closed == portStatus ? "CLOSED" : "OPEN" ),
-			COLOR_RESET_STRING
-		);
+		char isOpen = ( PortStatus_Open == portStatus );
+		(*printFunction)( isOpen, threadArg->port ); 
 	}
 	return NULL;
 }
