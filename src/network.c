@@ -25,6 +25,10 @@ struct hostent *resolveHostInfo( const char *hostName )
 
 PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )
 {
+	if( hostInfo == NULL )
+	{
+		return PortStatus_Closed;
+	}
 	int socketHandle = socket( AF_INET, SOCK_STREAM, 0 );
 	if( socketHandle < 0 )
 	{

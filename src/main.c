@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "common.h"
 #include "network.h"
 #include "colors.h"
 #include "timer.h"
@@ -34,7 +35,7 @@ int main( int argc, char **argv )
 	AppConfig_init( &appConfig );
 	AppConfig_parseCommandLine( &appConfig, argc, argv );
 
-	pthread_t *threads = (pthread_t*)calloc( appConfig.numThreads, sizeof( pthread_t ) );
+	pthread_t *threads = (pthread_t *)calloc( appConfig.numThreads, sizeof( pthread_t ) );
 
 	Timer_start();
 
@@ -62,6 +63,7 @@ int main( int argc, char **argv )
 				threadArg->port = currentPort;
 				threadArg->appConfig = &appConfig;
 				pthread_create( &threads[ i ], NULL, threadRun, (void *)threadArg );
+				FREE_NULL( threadArg );
 				currentPort++;
 				threadsCreated++;
 			}
@@ -77,7 +79,7 @@ int main( int argc, char **argv )
 
 	printf( "Elapsed time: %ld seconds\n", Timer_getElapsedTime() );
 
-	pthread_exit( NULL );
+	FREE_NULL( threads );
 
 	return EXIT_SUCCESS;
 }

@@ -15,9 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+#include "common.h"
 #include "threads.h"
 #include "colors.h"
 #include "network.h"
+
+#include <netdb.h>
 
 void printPlusesMinuses( char isOpen, short port )
 {
@@ -26,28 +29,38 @@ void printPlusesMinuses( char isOpen, short port )
 
 void printOpenClosed( char isOpen, short port )
 {
-	printf( "Port %d is %s%s%s\n", 
+	struct servent *portInfo = NULL;
+	char *statusColor = Color_getString( 1, 37, ( isOpen? 42: 41 ) );
+
+	portInfo = getservbyport( htons( port ), NULL );
+
+	printf( "Port %d (%s) is %s%s%s\n", 
 		port,
-		Color_getString( 1, 37, ( isOpen? 42: 41 ) ),
+		portInfo != NULL? portInfo->s_name: "-",
+		statusColor,
 		( isOpen? "OPEN": "CLOSED" ),
 		COLOR_RESET_STRING
 	);
+	FREE_NULL( statusColor );
 }
 
 void *threadRun( void *arg )
 {
 	struct ThreadArg *threadArg = (struct ThreadArg *)arg;
 	char portStatus = checkPortStatus( threadArg->hostInfo, threadArg->port );
-	void **( *printFunction )( char, short ) = printOpenClosed(char, short);
+	void ( *printFunction )( char, short ) = printOpenClosed;
 	if( FORMAT_PLUSES_MINUSES == threadArg->printFormat )
 	{
-		( printFunction ) = &printPlusesMinuses;
+		printFunction = printPlusesMinuses;
 	}
 	if( portStatus == PortStatus_Open || threadArg->appConfig->showOnlyOpen == 0 )
 	{
 		char isOpen = ( PortStatus_Open == portStatus );
-		(*printFunction)( isOpen, threadArg->port ); 
+		//(*printFunction)( isOpen, threadArg->port ); 
+		printPlusesMinuses( isOpen, threadArg->port ); 
 	}
+	
+	//pthread_exit( NULL );
 	return NULL;
 }
 
