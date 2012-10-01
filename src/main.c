@@ -18,33 +18,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include "common.h"
 #include "network.h"
-#include "colors.h"
+#include "output.h"
 #include "timer.h"
 #include "app-config.h"
 #include "threads.h"
-
-void printPlusesMinuses( char isOpen, short port )
-{
-	printf( "%c%u\n", ( isOpen? '+': '-' ), port );
-}
-
-void printOpenClosed( char isOpen, short port )
-{
-	char *statusColor = Color_getString( 1, 37, ( isOpen? 42: 41 ) );
-	struct servent *portInfo = getservbyport( htons( port ), NULL );
-
-	printf( "Port %d (%s) is %s%s%s\n", 
-		port,
-		portInfo != NULL? portInfo->s_name: "-",
-		statusColor,
-		( isOpen? "OPEN": "CLOSED" ),
-		COLOR_RESET_STRING
-	);
-	FREE_NULL( statusColor );
-}
 
 /**
  * Application entry point.
@@ -92,7 +73,6 @@ int main( int argc, char **argv )
 				memset( inData, 0, sizeof( struct ThreadInData ) );
 				inData->hostInfo = hostInfo;
 				inData->port = currentPort;
-				inData->appConfig = &appConfig;
 				pthread_create( &threads[ i ], NULL, threadRun, (void *)inData );
 				currentPort++;
 				threadsCreated++;
@@ -108,14 +88,14 @@ int main( int argc, char **argv )
 
 	for( i = 0; i < numPorts; i++ )
 	{
-		void ( *printFunction )( char, short ) = printOpenClosed;
+		void ( *printFunction )( struct ThreadOutData * ) = printOpenClosed;
 		if( FORMAT_PLUSES_MINUSES == appConfig.printFormat )
 		{
 			printFunction = printPlusesMinuses;
 		}
-		if( outData[i]->isOpen || appConfig.showOnlyOpen == 0 )
+		if( outData[ i ]->isOpen || appConfig.showOnlyOpen == 0 )
 		{
-			printFunction( outData[i]->isOpen, outData[i]->port ); 
+			printFunction( outData[ i ] ); 
 		}
 	}
 

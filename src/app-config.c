@@ -17,6 +17,12 @@
  */
 #include "app-config.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <unistd.h>
+
 void AppConfig_init( AppConfig *appConfig )
 {
 	AppConfig_setHostName( appConfig, "localhost" );

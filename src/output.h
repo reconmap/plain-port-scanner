@@ -15,15 +15,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef COLORS_H
-#define COLORS_H
-
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
+#ifndef OUTPUT_H
+#define OUTPUT_H
 
 #define COLOR_RESET_STRING "\033[0m"
+
+#include "threads.h"
+
+void printPlusesMinuses( struct ThreadOutData *outData );
+
+void printOpenClosed( struct ThreadOutData *outData );
 
 /**
  * Returns the specified color.

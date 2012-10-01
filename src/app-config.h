@@ -18,12 +18,6 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <strings.h>
-#include <unistd.h>
-
 enum
 {
 	FORMAT_OPEN_CLOSED = 0,

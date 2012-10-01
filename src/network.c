@@ -17,6 +17,8 @@
  */
 #include "network.h"
 
+#include <string.h>
+#include <strings.h>
 #include <unistd.h>
 
 struct hostent *resolveHostInfo( const char *hostName )
@@ -25,17 +27,34 @@ struct hostent *resolveHostInfo( const char *hostName )
 	return hostInfo;
 }
 
+char *resolveServiceName( unsigned short port )
+{
+	struct servent portInfo;
+	struct servent *portInfoPointer;
+	char buffer[1024];	
+
+	memset( buffer, 0, 1024 );
+	if( 0 == getservbyport_r( htons( port ), NULL, &portInfo,buffer, 1024, &portInfoPointer ) && portInfoPointer != NULL )
+	{
+		return strdup( portInfo.s_name );
+	}
+
+	return NULL;
+}
+
 PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )
 {
+	char portStatus = PortStatus_Closed;
+
 	int socketHandle = socket( AF_INET, SOCK_STREAM, 0 );
 	struct sockaddr_in socketInfo;
 	if( hostInfo == NULL )
 	{
-		return PortStatus_Closed;
+		return PortStatus_Unkown;
 	}
 	if( socketHandle < 0 )
 	{
-		return PortStatus_Closed;
+		return PortStatus_Unkown;
 	}
 
 	bzero( &socketInfo, sizeof( struct sockaddr_in ) );
@@ -43,14 +62,13 @@ PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )
 	socketInfo.sin_family = AF_INET;
 	socketInfo.sin_port = htons( port );
 
-	if( connect( socketHandle, (struct sockaddr *)&socketInfo, sizeof( struct sockaddr_in ) ) < 0 )
+	if( connect( socketHandle, (struct sockaddr *)&socketInfo, sizeof( struct sockaddr_in ) ) == 0 )
 	{
-		close( socketHandle );
-		return PortStatus_Closed;
+		portStatus = PortStatus_Open;
 	}
 
 	close( socketHandle );
 
-	return PortStatus_Open;
+	return portStatus;
 }
 

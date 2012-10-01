@@ -19,8 +19,6 @@
 #define NETWORK_H
 
 #include <netdb.h>
-#include <string.h>
-#include <strings.h>
 
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -28,11 +26,14 @@
 
 typedef enum 
 {
-	PortStatus_Open,
-	PortStatus_Closed
+	PortStatus_Open = 0,
+	PortStatus_Closed,
+	PortStatus_Unkown
 } PortStatus;
 
 struct hostent *resolveHostInfo( const char *hostName );
+
+char *resolveServiceName( unsigned short port );
 
 PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port );
 

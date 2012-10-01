@@ -21,7 +21,7 @@
 #include <time.h>
 
 /**
- * Structure that holds timing information.
+ * Data structure that holds timing information.
  */
 struct TimerConfig
 {

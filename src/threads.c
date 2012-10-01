@@ -15,13 +15,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "common.h"
 #include "threads.h"
-#include "colors.h"
+
 #include "network.h"
 
-#include <netdb.h>
 #include <stdlib.h>
+#include <string.h>
 
 void *threadRun( void *arg )
 {
@@ -32,6 +31,7 @@ void *threadRun( void *arg )
 
 	outData->isOpen = ( PortStatus_Open == portStatus );
 	outData->port = inData->port;
+	outData->serviceName = resolveServiceName( inData->port );
 	
 	pthread_exit( outData );
 

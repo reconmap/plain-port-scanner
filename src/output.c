@@ -15,9 +15,34 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "colors.h"
+#include "output.h"
 
+#include <sys/types.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <unistd.h>
+
+#include "common.h"
+
+void printPlusesMinuses( struct ThreadOutData *outData )
+{
+	printf( "%c%u\n", ( outData->isOpen? '+': '-' ), outData->port );
+}
+
+void printOpenClosed( struct ThreadOutData *outData )
+{
+	char *statusColor = Color_getString( 1, 37, ( outData->isOpen? 42: 41 ) );
+
+	printf( "Port %d (%s) is %s%s%s\n", 
+		outData->port,
+		outData->serviceName,
+		statusColor,
+		( outData->isOpen? "OPEN": "CLOSED" ),
+		COLOR_RESET_STRING
+	);
+	FREE_NULL( statusColor );
+}
 
 /**
  * Returns the specified color.
