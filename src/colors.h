@@ -23,7 +23,7 @@
 #include <string.h>
 #include <stdio.h>
 
-#define COLOR_RESET_STRING "\E[0m"
+#define COLOR_RESET_STRING "\033[0m"
 
 /**
  * Returns the specified color.

@@ -17,12 +17,6 @@
  */
 #include "app-config.h"
 
-AppConfig* AppConfig_new()
-{
-	AppConfig *appConfig = (AppConfig*)malloc( sizeof( AppConfig ) );
-	return appConfig;
-}
-
 void AppConfig_init( AppConfig *appConfig )
 {
 	AppConfig_setHostName( appConfig, "localhost" );
@@ -36,7 +30,7 @@ void AppConfig_init( AppConfig *appConfig )
 
 void AppConfig_setHostName( AppConfig *appConfig, char *hostName )
 {
-	memset( &appConfig->hostName, '\0', 255 );
+	memset( appConfig->hostName, '\0', 255 );
 	strncat( appConfig->hostName, hostName, 254 );
 }
 

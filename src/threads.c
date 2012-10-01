@@ -21,46 +21,20 @@
 #include "network.h"
 
 #include <netdb.h>
-
-void printPlusesMinuses( char isOpen, short port )
-{
-	printf( "%c%u\n", ( isOpen? '+': '-' ), port );
-}
-
-void printOpenClosed( char isOpen, short port )
-{
-	struct servent *portInfo = NULL;
-	char *statusColor = Color_getString( 1, 37, ( isOpen? 42: 41 ) );
-
-	portInfo = getservbyport( htons( port ), NULL );
-
-	printf( "Port %d (%s) is %s%s%s\n", 
-		port,
-		portInfo != NULL? portInfo->s_name: "-",
-		statusColor,
-		( isOpen? "OPEN": "CLOSED" ),
-		COLOR_RESET_STRING
-	);
-	FREE_NULL( statusColor );
-}
+#include <stdlib.h>
 
 void *threadRun( void *arg )
 {
-	struct ThreadArg *threadArg = (struct ThreadArg *)arg;
-	char portStatus = checkPortStatus( threadArg->hostInfo, threadArg->port );
-	void ( *printFunction )( char, short ) = printOpenClosed;
-	if( FORMAT_PLUSES_MINUSES == threadArg->printFormat )
-	{
-		printFunction = printPlusesMinuses;
-	}
-	if( portStatus == PortStatus_Open || threadArg->appConfig->showOnlyOpen == 0 )
-	{
-		char isOpen = ( PortStatus_Open == portStatus );
-		//(*printFunction)( isOpen, threadArg->port ); 
-		printPlusesMinuses( isOpen, threadArg->port ); 
-	}
+	struct ThreadInData *inData = (struct ThreadInData *)arg;
+	struct ThreadOutData *outData = (struct ThreadOutData *)malloc( sizeof( struct ThreadOutData ) );
+
+	char portStatus = checkPortStatus( inData->hostInfo, inData->port );
+
+	outData->isOpen = ( PortStatus_Open == portStatus );
+	outData->port = inData->port;
 	
-	//pthread_exit( NULL );
+	pthread_exit( outData );
+
 	return NULL;
 }
 

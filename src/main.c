@@ -26,20 +26,50 @@
 #include "app-config.h"
 #include "threads.h"
 
+void printPlusesMinuses( char isOpen, short port )
+{
+	printf( "%c%u\n", ( isOpen? '+': '-' ), port );
+}
+
+void printOpenClosed( char isOpen, short port )
+{
+	char *statusColor = Color_getString( 1, 37, ( isOpen? 42: 41 ) );
+	struct servent *portInfo = getservbyport( htons( port ), NULL );
+
+	printf( "Port %d (%s) is %s%s%s\n", 
+		port,
+		portInfo != NULL? portInfo->s_name: "-",
+		statusColor,
+		( isOpen? "OPEN": "CLOSED" ),
+		COLOR_RESET_STRING
+	);
+	FREE_NULL( statusColor );
+}
+
 /**
  * Application entry point.
  */
 int main( int argc, char **argv )
 {
+	pthread_t *threads = NULL;
+	int numPorts = -1;
+	struct ThreadOutData **outData = NULL;
+	struct hostent *hostInfo = NULL;
+	int counter = 0;
+	int currentPort = -1;
+	int i = 0;
+
 	AppConfig appConfig;
 	AppConfig_init( &appConfig );
 	AppConfig_parseCommandLine( &appConfig, argc, argv );
 
-	pthread_t *threads = (pthread_t *)calloc( appConfig.numThreads, sizeof( pthread_t ) );
+	threads = (pthread_t *)calloc( appConfig.numThreads, sizeof( pthread_t ) );
+	numPorts = appConfig.toPort - appConfig.fromPort;
+	outData = malloc( sizeof( struct ThreadOutData ) * numPorts );
 
 	Timer_start();
 
-	struct hostent *hostInfo = resolveHostInfo( appConfig.hostName );
+	hostInfo = resolveHostInfo( appConfig.hostName );
 
 	if( hostInfo == NULL )
 	{
@@ -49,7 +79,7 @@ int main( int argc, char **argv )
 
 	printf( "Host resolved to IP: %s\n", inet_ntoa( *((struct in_addr *)hostInfo->h_addr_list[0]) ) );
 
-	int currentPort = appConfig.fromPort;
+	currentPort = appConfig.fromPort;
 	while( currentPort < appConfig.toPort )
 	{
 		int threadsCreated = 0;
@@ -58,12 +88,12 @@ int main( int argc, char **argv )
 		{
 			if( currentPort <= appConfig.toPort )
 			{
-				struct ThreadArg *threadArg = (struct ThreadArg*)malloc( sizeof( struct ThreadArg ) );
-				threadArg->hostInfo = hostInfo;
-				threadArg->port = currentPort;
-				threadArg->appConfig = &appConfig;
-				pthread_create( &threads[ i ], NULL, threadRun, (void *)threadArg );
-				FREE_NULL( threadArg );
+				struct ThreadInData *inData = (struct ThreadInData*)malloc( sizeof( struct ThreadInData ) );
+				memset( inData, 0, sizeof( struct ThreadInData ) );
+				inData->hostInfo = hostInfo;
+				inData->port = currentPort;
+				inData->appConfig = &appConfig;
+				pthread_create( &threads[ i ], NULL, threadRun, (void *)inData );
 				currentPort++;
 				threadsCreated++;
 			}
@@ -71,7 +101,21 @@ int main( int argc, char **argv )
 
 		for( i = 0; i < threadsCreated; i++ )
 		{
-			pthread_join( threads[ i ], NULL );
+			pthread_join( threads[ i ], (void **)&outData[ counter ] );
+			counter++;
+		}
+	}
+
+	for( i = 0; i < numPorts; i++ )
+	{
+		void ( *printFunction )( char, short ) = printOpenClosed;
+		if( FORMAT_PLUSES_MINUSES == appConfig.printFormat )
+		{
+			printFunction = printPlusesMinuses;
+		}
+		if( outData[i]->isOpen || appConfig.showOnlyOpen == 0 )
+		{
+			printFunction( outData[i]->isOpen, outData[i]->port ); 
 		}
 	}
 

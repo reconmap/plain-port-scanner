@@ -18,6 +18,7 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
@@ -25,7 +26,7 @@
 
 enum
 {
-	FORMAT_OPEN_CLOSED,
+	FORMAT_OPEN_CLOSED = 0,
 	FORMAT_PLUSES_MINUSES
 };
 
@@ -40,8 +41,6 @@ struct _AppConfig
 };
 
 typedef struct _AppConfig AppConfig;
-
-AppConfig* AppConfig_new();
 
 void AppConfig_init( AppConfig *appConfig );
 

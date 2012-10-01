@@ -17,6 +17,8 @@
  */
 #include "network.h"
 
+#include <unistd.h>
+
 struct hostent *resolveHostInfo( const char *hostName )
 {
 	struct hostent *hostInfo = gethostbyname( hostName );
@@ -25,17 +27,17 @@ struct hostent *resolveHostInfo( const char *hostName )
 
 PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )
 {
+	int socketHandle = socket( AF_INET, SOCK_STREAM, 0 );
+	struct sockaddr_in socketInfo;
 	if( hostInfo == NULL )
 	{
 		return PortStatus_Closed;
 	}
-	int socketHandle = socket( AF_INET, SOCK_STREAM, 0 );
 	if( socketHandle < 0 )
 	{
 		return PortStatus_Closed;
 	}
 
-	struct sockaddr_in socketInfo;
 	bzero( &socketInfo, sizeof( struct sockaddr_in ) );
 	memcpy( (void *)&socketInfo.sin_addr, hostInfo->h_addr, hostInfo->h_length );
 	socketInfo.sin_family = AF_INET;

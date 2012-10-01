@@ -22,12 +22,18 @@
 
 #include "app-config.h"
 
-struct ThreadArg
+struct ThreadInData
 {
 	struct hostent *hostInfo;
 	unsigned short port;
 	unsigned char printFormat;
 	AppConfig *appConfig;
+};
+
+struct ThreadOutData
+{
+	unsigned short port;
+	unsigned char isOpen;
 };
 
 void *threadRun( void *arg );
