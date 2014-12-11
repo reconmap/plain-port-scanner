@@ -27,6 +27,8 @@
 #include "app-config.h"
 #include "threads.h"
 
+char const *programName;
+
 /**
  * Application entry point.
  */
@@ -41,6 +43,8 @@ int main( int argc, char **argv )
 	int i = 0;
 
 	AppConfig appConfig;
+
+	programName = argv[0];
 	AppConfig_init( &appConfig );
 	AppConfig_parseCommandLine( &appConfig, argc, argv );
 
@@ -58,7 +62,7 @@ int main( int argc, char **argv )
 		return EXIT_FAILURE;
 	}
 
-	printf( "Host resolved to IP: %s\n", inet_ntoa( *((struct in_addr *)hostInfo->h_addr_list[0]) ) );
+	printf( "Scanning open ports on %s (%s)\n", inet_ntoa( *((struct in_addr *)hostInfo->h_addr_list[0] ) ), appConfig.hostName );
 
 	currentPort = appConfig.fromPort;
 	while( currentPort < appConfig.toPort )

@@ -22,15 +22,24 @@
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
+#include <getopt.h>
+
+#define DEFAULT_FROM_PORT 1
+#define DEFAULT_TO_PORT 80
+#define DEFAULT_TARGET_HOST "localhost"
+
+extern const char *programName;
+
+void AppConfig_setHostName( AppConfig *appConfig, char *hostName );
 
 void AppConfig_init( AppConfig *appConfig )
 {
-	AppConfig_setHostName( appConfig, "localhost" );
+	AppConfig_setHostName( appConfig, DEFAULT_TARGET_HOST );
 
-	appConfig->fromPort = 80;
-	appConfig->toPort = 80;
+	appConfig->fromPort = DEFAULT_FROM_PORT;
+	appConfig->toPort = DEFAULT_TO_PORT;
 	appConfig->numThreads = 5;
-	appConfig->showOnlyOpen = 0;
+	appConfig->showOnlyOpen = false;
 	appConfig->printFormat = FORMAT_OPEN_CLOSED;
 }
 
@@ -40,11 +49,26 @@ void AppConfig_setHostName( AppConfig *appConfig, char *hostName )
 	strncat( appConfig->hostName, hostName, 254 );
 }
 
+void AppConfig_showHelp()
+{
+	printf( "usage: %s [options]\n"
+		"\t-f Lower bound port number (default: %d)\n"
+		"\t-t Upper bound port number (default: %d)\n"
+		"\t-a Target host name or address (default: %s)\n"
+		"\t-o Show only open ports (default: false)\n"
+		"\t-p Show minuses and pluses instead of green/red\n"
+		"\t-h Help\n",
+		programName,
+		DEFAULT_FROM_PORT, DEFAULT_TO_PORT,
+		DEFAULT_TARGET_HOST
+	);	
+}
+
 void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 {
 	int opt = -1;
 
-	while( ( opt = getopt( argc, argv, "f:t:h:op:" ) ) != -1 )
+	while( ( opt = getopt( argc, argv, "hf:t:a:op:" ) ) != -1 )
 	{
 		switch( opt )
 		{
@@ -54,11 +78,11 @@ void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 			case 't':
 				appConfig->toPort = atoi( optarg );
 				break;
-			case 'h':
+			case 'a':
 				AppConfig_setHostName( appConfig, optarg );
 				break;
 			case 'o':
-				appConfig->showOnlyOpen = 1;
+				appConfig->showOnlyOpen = true;
 				break;
 			case 'p':
 				if( 0 == strncmp( optarg, "pluses-minuses", 14 ) )
@@ -66,7 +90,10 @@ void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 					appConfig->printFormat = FORMAT_PLUSES_MINUSES;
 				}
 				break;
-
+			case 'h':
+				AppConfig_showHelp();
+				exit( 0 );
+				break;
 		}
 	}	
 }

@@ -18,6 +18,8 @@
 #ifndef APP_CONFIG_H
 #define APP_CONFIG_H
 
+#include <stdbool.h>
+
 enum
 {
 	FORMAT_OPEN_CLOSED = 0,
@@ -30,16 +32,13 @@ struct _AppConfig
 	unsigned short fromPort;
 	unsigned short toPort;
 	unsigned char numThreads;
-	unsigned char showOnlyOpen;
+	bool showOnlyOpen;
 	unsigned char printFormat;
 };
 
 typedef struct _AppConfig AppConfig;
 
 void AppConfig_init( AppConfig *appConfig );
-
-void AppConfig_setHostName( AppConfig *appConfig, char *hostName );
-
 void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv );
 
 #endif

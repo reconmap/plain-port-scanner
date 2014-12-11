@@ -15,3 +15,6 @@ Makefile
 config.log
 config.status
 src/.deps
+src/*.o
+src/plain-port-scanner
+
