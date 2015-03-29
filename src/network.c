@@ -17,6 +17,8 @@
  */
 #include "network.h"
 
+#include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <strings.h>
 #include <unistd.h>
@@ -29,17 +31,31 @@ struct hostent *resolveHostInfo( const char *hostName )
 
 char *resolveServiceName( unsigned short port )
 {
-	struct servent portInfo;
+	bool shouldFree = false;
+	char *serviceName = NULL;
+	struct servent *portInfo = NULL;
+#if !(defined(__APPLE__) && defined(__MACH__))
 	struct servent *portInfoPointer;
+#endif
 	char buffer[1024];	
 
 	memset( buffer, 0, 1024 );
-	if( 0 == getservbyport_r( htons( port ), NULL, &portInfo,buffer, 1024, &portInfoPointer ) && portInfoPointer != NULL )
+
+#if defined(__APPLE__) && defined(__MACH__)
+	if( ( portInfo = getservbyport( htons( port ), NULL ) ) != NULL )
+#else
+	shouldFree = true;
+	portInfo = (struct servent*)malloc( sizeof( struct servent ) );
+	if( 0 == getservbyport_r( htons( port ), NULL, portInfo, buffer, 1024, &portInfoPointer ) && portInfoPointer != NULL )
+#endif
 	{
-		return strdup( portInfo.s_name );
+		serviceName = strdup( portInfo->s_name );
 	}
 
-	return NULL;
+	if( shouldFree && portInfo )
+		free( portInfo );
+
+	return serviceName;
 }
 
 PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )

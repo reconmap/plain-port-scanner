@@ -17,50 +17,26 @@
  */
 #include "output.h"
 
-#include <sys/types.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
+#define QUOTE(n) #n
+#define COLOR(r,g,b) "\033[" QUOTE(r) ";" QUOTE(g) ";" QUOTE(b) "m"
 
-#include "common.h"
+#include <stdio.h>
 
 void printPlusesMinuses( struct ThreadOutData *outData )
 {
-	printf( "%c%u\n", ( outData->isOpen? '+': '-' ), outData->port );
+	printf( "%c%u\n", ( outData->isOpen? '+' : '-' ), outData->port );
 }
 
 void printOpenClosed( struct ThreadOutData *outData )
 {
-	char *statusColor = Color_getString( 1, 37, ( outData->isOpen? 42: 41 ) );
+	const char *color = outData->isOpen ? COLOR(1,37,42) : COLOR(1,37,41);
 
 	printf( "Port %d (%s) is %s%s%s\n", 
 		outData->port,
 		outData->serviceName,
-		statusColor,
+		color,
 		( outData->isOpen? "OPEN": "CLOSED" ),
 		COLOR_RESET_STRING
 	);
-	FREE_NULL( statusColor );
-}
-
-/**
- * Returns the specified color.
- */
-char *Color_getString( unsigned char hl, unsigned char fg, unsigned char bg )
-{
-	size_t colorLen = 20 * sizeof( char );
-	char *color = (char *)malloc( colorLen );
-	memset( color, '\0', colorLen );
-	sprintf( color, "\033[%d;%d;%dm", hl, fg, bg );
-	return color;
-}
-
-/**
- * Resets previous assigned colours.
- */
-void Color_reset()
-{
-	write( 1, COLOR_RESET_STRING, 4 );
 }
 

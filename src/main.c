@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <string.h>
 
-#include "common.h"
 #include "network.h"
 #include "output.h"
 #include "timer.h"
@@ -101,13 +100,15 @@ int main( int argc, char **argv )
 		{
 			printFunction( outData[ i ] ); 
 		}
+		free( outData[ i ]->serviceName );
 	}
 
 	Timer_stop();
 
 	printf( "Elapsed time: %ld seconds\n", Timer_getElapsedTime() );
 
-	FREE_NULL( threads );
+	if( threads != NULL )
+		free( threads );
 
 	return EXIT_SUCCESS;
 }

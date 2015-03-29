@@ -26,17 +26,5 @@ void printPlusesMinuses( struct ThreadOutData *outData );
 
 void printOpenClosed( struct ThreadOutData *outData );
 
-/**
- * Returns the specified color.
- */
-char *Color_getString( unsigned char hl, unsigned char fg, unsigned char bg );
-
-const char *Color_getResetString();
-
-/**
- * Resets previous assigned colours.
- */
-void Color_reset();
-
 #endif
 
