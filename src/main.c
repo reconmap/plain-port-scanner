@@ -1,6 +1,6 @@
 /**
  * plain-port-scanner finds open ports in local and remote hosts.
- * Copyright (C) 2012 Santiago Lizardo
+ * Copyright (C) Santiago Lizardo
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ int main( int argc, char **argv )
 	AppConfig_parseCommandLine( &appConfig, argc, argv );
 
 	threads = (pthread_t *)calloc( appConfig.numThreads, sizeof( pthread_t ) );
-	numPorts = appConfig.toPort - appConfig.fromPort;
+	numPorts = appConfig.toPort - appConfig.fromPort + 1;
 	outData = malloc( sizeof( struct ThreadOutData ) * numPorts );
 
 	Timer_start();
@@ -64,7 +64,7 @@ int main( int argc, char **argv )
 	printf( "Scanning open ports on %s (%s)\n", inet_ntoa( *((struct in_addr *)hostInfo->h_addr_list[0] ) ), appConfig.hostName );
 
 	currentPort = appConfig.fromPort;
-	while( currentPort < appConfig.toPort )
+	while( currentPort <= appConfig.toPort )
 	{
 		int threadsCreated = 0;
 		unsigned int i = 0;
@@ -91,7 +91,7 @@ int main( int argc, char **argv )
 
 	for( i = 0; i < numPorts; i++ )
 	{
-		void ( *printFunction )( struct ThreadOutData * ) = printOpenClosed;
+		void ( *printFunction )( const struct ThreadOutData * ) = printOpenClosed;
 		if( FORMAT_PLUSES_MINUSES == appConfig.printFormat )
 		{
 			printFunction = printPlusesMinuses;

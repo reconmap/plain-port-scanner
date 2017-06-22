@@ -1,5 +1,7 @@
 NEWS
 
+2017-06: Docker image.
+2015-04: OSX support.
 2014-12: Command line -h/--help command added and other minor improvements.
 2012-09: First version (1.0) published
 

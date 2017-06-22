@@ -11,6 +11,6 @@ RUN ./autogen.sh && ./configure
 RUN make install
 RUN ls -la /usr/local/bin/plain-port-scanner
 
-ENTRYPOINT ["/usr/local/bin/plain-port-scanner", "-a"]
-CMD ["localhost"] 
+ENTRYPOINT ["/usr/local/bin/plain-port-scanner"]
+CMD ["-a", "localhost"] 
 

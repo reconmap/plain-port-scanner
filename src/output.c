@@ -1,6 +1,6 @@
 /**
  * plain-port-scanner finds open ports in local and remote hosts.
- * Copyright (C) 2012 Santiago Lizardo
+ * Copyright (C) Santiago Lizardo
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,16 +22,19 @@
 
 #include <stdio.h>
 
-void printPlusesMinuses( struct ThreadOutData *outData )
+void printPlusesMinuses( const struct ThreadOutData* outData )
 {
-	printf( "%c%u\n", ( outData->isOpen? '+' : '-' ), outData->port );
+	printf( "%c%u\n", ( outData->isOpen ? '+' : '-' ), outData->port );
 }
 
-void printOpenClosed( struct ThreadOutData *outData )
+void printOpenClosed( const struct ThreadOutData* outData )
 {
 	const char *color = outData->isOpen ? COLOR(1,37,42) : COLOR(1,37,41);
 
-	printf( "Port %d (%s) is %s%s%s\n", 
+	const char* format = outData->serviceName ?
+		"Port %d (%s) is %s%s%s\n" :
+		"Port %d %s is %s%s%s\n";
+	printf( format, 
 		outData->port,
 		outData->serviceName,
 		color,

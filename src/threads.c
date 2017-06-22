@@ -1,6 +1,6 @@
 /**
  * plain-port-scanner finds open ports in local and remote hosts.
- * Copyright (C) 2012 Santiago Lizardo
+ * Copyright (C) Santiago Lizardo
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
