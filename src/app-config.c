@@ -24,26 +24,26 @@
 #include <unistd.h>
 #include <getopt.h>
 
-#define DEFAULT_FROM_PORT 1
-#define DEFAULT_TO_PORT 80
-#define DEFAULT_TARGET_HOST "localhost"
+const unsigned DefaultFromPort = 1;
+const unsigned DefaultToPort = 80;
+const char DefaultTargetHost[] = "localhost";
 
 extern const char *programName;
 
-void AppConfig_setHostName( AppConfig *appConfig, char *hostName );
+void AppConfig_setHostName( AppConfig *appConfig, const char *hostName );
 
 void AppConfig_init( AppConfig *appConfig )
 {
-	AppConfig_setHostName( appConfig, DEFAULT_TARGET_HOST );
+	AppConfig_setHostName( appConfig, DefaultTargetHost );
 
-	appConfig->fromPort = DEFAULT_FROM_PORT;
-	appConfig->toPort = DEFAULT_TO_PORT;
+	appConfig->fromPort = DefaultFromPort;
+	appConfig->toPort = DefaultToPort;
 	appConfig->numThreads = 5;
 	appConfig->showOnlyOpen = false;
 	appConfig->printFormat = FORMAT_OPEN_CLOSED;
 }
 
-void AppConfig_setHostName( AppConfig *appConfig, char *hostName )
+void AppConfig_setHostName( AppConfig *appConfig, const char *hostName )
 {
 	memset( appConfig->hostName, '\0', 255 );
 	strncat( appConfig->hostName, hostName, 254 );
@@ -59,8 +59,8 @@ void AppConfig_showHelp()
 		"\t-p Show minuses and pluses instead of green/red\n"
 		"\t-h Help\n",
 		programName,
-		DEFAULT_FROM_PORT, DEFAULT_TO_PORT,
-		DEFAULT_TARGET_HOST
+		DefaultFromPort, DefaultToPort,
+		DefaultTargetHost	
 	);	
 }
 
