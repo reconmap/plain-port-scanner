@@ -36,6 +36,7 @@ int main( int argc, char **argv )
 	pthread_t *threads = NULL;
 	int numPorts = -1;
 	struct ThreadOutData **outData = NULL;
+	struct ThreadInData **inData;
 	struct hostent *hostInfo = NULL;
 	int counter = 0;
 	int currentPort = -1;
@@ -50,7 +51,7 @@ int main( int argc, char **argv )
 	threads = (pthread_t *)calloc( appConfig.numThreads, sizeof( pthread_t ) );
 	numPorts = appConfig.toPort - appConfig.fromPort + 1;
 	outData = malloc( sizeof( struct ThreadOutData ) * numPorts );
-
+	inData = (struct ThreadInData**)malloc( sizeof( struct ThreadInData* ) * appConfig.numThreads );
 	Timer_start();
 
 	hostInfo = resolveHostInfo( appConfig.hostName );
@@ -72,11 +73,11 @@ int main( int argc, char **argv )
 		{
 			if( currentPort <= appConfig.toPort )
 			{
-				struct ThreadInData *inData = (struct ThreadInData*)malloc( sizeof( struct ThreadInData ) );
-				memset( inData, 0, sizeof( struct ThreadInData ) );
-				inData->hostInfo = hostInfo;
-				inData->port = currentPort;
-				pthread_create( &threads[ i ], NULL, threadRun, (void *)inData );
+				inData[i] = (struct ThreadInData*)malloc(sizeof(struct ThreadInData));
+				memset( inData[i], 0, sizeof( struct ThreadInData ) );
+				inData[i]->hostInfo = hostInfo;
+				inData[i]->port = currentPort;
+				pthread_create( &threads[ i ], NULL, threadRun, (void *)inData[i] );
 				currentPort++;
 				threadsCreated++;
 			}
@@ -85,9 +86,11 @@ int main( int argc, char **argv )
 		for( i = 0; i < threadsCreated; i++ )
 		{
 			pthread_join( threads[ i ], (void **)&outData[ counter ] );
+			free(inData[i]);
 			counter++;
 		}
 	}
+	free(inData);
 
 	for( i = 0; i < numPorts; i++ )
 	{
@@ -101,7 +104,9 @@ int main( int argc, char **argv )
 			printFunction( outData[ i ] ); 
 		}
 		free( outData[ i ]->serviceName );
+		free( outData[ i ] );
 	}
+	free(outData);
 
 	Timer_stop();
 
