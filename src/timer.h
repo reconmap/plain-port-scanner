@@ -23,8 +23,7 @@
 /**
  * Data structure that holds timing information.
  */
-struct TimerConfig
-{
+struct TimerConfig {
 	time_t beginTime;
 	time_t endTime;
 } timerConfig;
@@ -47,4 +46,3 @@ void Timer_stop();
 time_t Timer_getElapsedTime();
 
 #endif
-

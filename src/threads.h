@@ -20,21 +20,18 @@
 
 #include <pthread.h>
 
-struct ThreadInData
-{
+struct ThreadInData {
 	struct hostent *hostInfo;
 	unsigned short port;
 	unsigned char printFormat;
 };
 
-struct ThreadOutData
-{
+struct ThreadOutData {
 	unsigned short port;
 	unsigned char isOpen;
 	char *serviceName;
 };
 
-void *threadRun( void *arg );
+void *threadRun(void *arg);
 
 #endif
-

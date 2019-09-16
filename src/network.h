@@ -24,18 +24,16 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-typedef enum 
-{
+typedef enum {
 	PortStatus_Open = 0,
 	PortStatus_Closed,
 	PortStatus_Unkown
 } PortStatus;
 
-struct hostent *resolveHostInfo( const char *hostName );
+struct hostent *resolveHostInfo(const char *hostName);
 
-char *resolveServiceName( unsigned short port );
+char *resolveServiceName(unsigned short port);
 
-PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port );
+PortStatus checkPortStatus(struct hostent *hostInfo, unsigned short port);
 
 #endif
-

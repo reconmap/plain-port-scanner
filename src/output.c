@@ -22,24 +22,21 @@
 
 #include <stdio.h>
 
-void printPlusesMinuses( const struct ThreadOutData* outData )
+void printPlusesMinuses(const struct ThreadOutData *outData)
 {
-	printf( "%c%u\n", ( outData->isOpen ? '+' : '-' ), outData->port );
+	printf("%c%u\n", (outData->isOpen ? '+' : '-'), outData->port);
 }
 
-void printOpenClosed( const struct ThreadOutData* outData )
+void printOpenClosed(const struct ThreadOutData *outData)
 {
-	const char *color = outData->isOpen ? COLOR(1,37,42) : COLOR(1,37,41);
+	const char *color =
+	    outData->isOpen ? COLOR(1, 37, 42) : COLOR(1, 37, 41);
 
-	const char* format = outData->serviceName ?
-		"Port %d (%s) is %s%s%s\n" :
-		"Port %d %s is %s%s%s\n";
-	printf( format, 
-		outData->port,
-		outData->serviceName,
-		color,
-		( outData->isOpen? "OPEN": "CLOSED" ),
-		COLOR_RESET_STRING
-	);
+	const char *format = outData->serviceName ?
+	    "Port %d (%s) is %s%s%s\n" : "Port %d %s is %s%s%s\n";
+	printf(format,
+	       outData->port,
+	       outData->serviceName,
+	       color,
+	       (outData->isOpen ? "OPEN" : "CLOSED"), COLOR_RESET_STRING);
 }
-

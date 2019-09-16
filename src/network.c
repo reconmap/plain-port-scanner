@@ -23,13 +23,13 @@
 #include <strings.h>
 #include <unistd.h>
 
-struct hostent *resolveHostInfo( const char *hostName )
+struct hostent *resolveHostInfo(const char *hostName)
 {
-	struct hostent *hostInfo = gethostbyname( hostName );
+	struct hostent *hostInfo = gethostbyname(hostName);
 	return hostInfo;
 }
 
-char *resolveServiceName( unsigned short port )
+char *resolveServiceName(unsigned short port)
 {
 	bool shouldFree = false;
 	char *serviceName = NULL;
@@ -37,54 +37,55 @@ char *resolveServiceName( unsigned short port )
 #if !(defined(__APPLE__) && defined(__MACH__))
 	struct servent *portInfoPointer;
 #endif
-	char buffer[1024];	
+	char buffer[1024];
 
-	memset( buffer, 0, 1024 );
+	memset(buffer, 0, 1024);
 
 #if defined(__APPLE__) && defined(__MACH__)
-	if( ( portInfo = getservbyport( htons( port ), NULL ) ) != NULL )
+	if ((portInfo = getservbyport(htons(port), NULL)) != NULL)
 #else
 	shouldFree = true;
-	portInfo = (struct servent*)malloc( sizeof( struct servent ) );
-	if( 0 == getservbyport_r( htons( port ), NULL, portInfo, buffer, 1024, &portInfoPointer ) && portInfoPointer != NULL )
+	portInfo = (struct servent *) malloc(sizeof(struct servent));
+	if (0 ==
+	    getservbyport_r(htons(port), NULL, portInfo, buffer, 1024,
+			    &portInfoPointer) && portInfoPointer != NULL)
 #endif
 	{
-		serviceName = strdup( portInfo->s_name );
+		serviceName = strdup(portInfo->s_name);
 	}
 
-	if( shouldFree && portInfo )
-		free( portInfo );
+	if (shouldFree && portInfo)
+		free(portInfo);
 
 	return serviceName;
 }
 
-PortStatus checkPortStatus( struct hostent *hostInfo, unsigned short port )
+PortStatus checkPortStatus(struct hostent * hostInfo, unsigned short port)
 {
 	char portStatus = PortStatus_Closed;
 
-	int socketHandle = socket( AF_INET, SOCK_STREAM, 0 );
+	int socketHandle = socket(AF_INET, SOCK_STREAM, 0);
 	struct sockaddr_in socketInfo;
-	if( hostInfo == NULL )
-	{
+	if (hostInfo == NULL) {
 		return PortStatus_Unkown;
 	}
-	if( socketHandle < 0 )
-	{
+	if (socketHandle < 0) {
 		return PortStatus_Unkown;
 	}
 
-	bzero( &socketInfo, sizeof( struct sockaddr_in ) );
-	memcpy( (void *)&socketInfo.sin_addr, hostInfo->h_addr, hostInfo->h_length );
+	bzero(&socketInfo, sizeof(struct sockaddr_in));
+	memcpy((void *) &socketInfo.sin_addr, hostInfo->h_addr,
+	       hostInfo->h_length);
 	socketInfo.sin_family = AF_INET;
-	socketInfo.sin_port = htons( port );
+	socketInfo.sin_port = htons(port);
 
-	if( connect( socketHandle, (struct sockaddr *)&socketInfo, sizeof( struct sockaddr_in ) ) == 0 )
-	{
+	if (connect
+	    (socketHandle, (struct sockaddr *) &socketInfo,
+	     sizeof(struct sockaddr_in)) == 0) {
 		portStatus = PortStatus_Open;
 	}
 
-	close( socketHandle );
+	close(socketHandle);
 
 	return portStatus;
 }
-

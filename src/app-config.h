@@ -20,14 +20,12 @@
 
 #include <stdbool.h>
 
-enum
-{
+enum {
 	FORMAT_OPEN_CLOSED = 0,
 	FORMAT_PLUSES_MINUSES
 };
 
-struct _AppConfig
-{
+struct _AppConfig {
 	char hostName[255];
 	unsigned short fromPort;
 	unsigned short toPort;
@@ -38,8 +36,8 @@ struct _AppConfig
 
 typedef struct _AppConfig AppConfig;
 
-void AppConfig_init( AppConfig *appConfig );
-void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv );
+void AppConfig_init(AppConfig * appConfig);
+void AppConfig_parseCommandLine(AppConfig * appConfig, int argc,
+				char **argv);
 
 #endif
-

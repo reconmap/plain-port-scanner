@@ -21,19 +21,19 @@
 
 #include <stdlib.h>
 
-void *threadRun( void *arg )
+void *threadRun(void *arg)
 {
-	struct ThreadInData *inData = (struct ThreadInData *)arg;
-	struct ThreadOutData *outData = (struct ThreadOutData *)malloc( sizeof( struct ThreadOutData ) );
+	struct ThreadInData *inData = (struct ThreadInData *) arg;
+	struct ThreadOutData *outData =
+	    (struct ThreadOutData *) malloc(sizeof(struct ThreadOutData));
 
-	char portStatus = checkPortStatus( inData->hostInfo, inData->port );
+	char portStatus = checkPortStatus(inData->hostInfo, inData->port);
 
-	outData->isOpen = ( PortStatus_Open == portStatus );
+	outData->isOpen = (PortStatus_Open == portStatus);
 	outData->port = inData->port;
-	outData->serviceName = resolveServiceName( inData->port );
-	
-	pthread_exit( outData );
+	outData->serviceName = resolveServiceName(inData->port);
+
+	pthread_exit(outData);
 
 	return NULL;
 }
-

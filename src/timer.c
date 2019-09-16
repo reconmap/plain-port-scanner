@@ -15,14 +15,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "timer.h" 
+#include "timer.h"
 
 /**
  * Records the start time.
  */
 void Timer_start()
 {
-	timerConfig.beginTime = time( NULL );
+	timerConfig.beginTime = time(NULL);
 }
 
 /**
@@ -30,7 +30,7 @@ void Timer_start()
  */
 void Timer_stop()
 {
-	timerConfig.endTime = time( NULL );
+	timerConfig.endTime = time(NULL);
 }
 
 /**
@@ -40,6 +40,5 @@ void Timer_stop()
  */
 time_t Timer_getElapsedTime()
 {
-	return ( timerConfig.endTime - timerConfig.beginTime );
+	return (timerConfig.endTime - timerConfig.beginTime);
 }
-

@@ -22,9 +22,8 @@
 
 #include "threads.h"
 
-void printPlusesMinuses( const struct ThreadOutData* outData );
+void printPlusesMinuses(const struct ThreadOutData *outData);
 
-void printOpenClosed( const struct ThreadOutData* outData );
+void printOpenClosed(const struct ThreadOutData *outData);
 
 #endif
-
