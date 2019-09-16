@@ -64,11 +64,21 @@ void AppConfig_showHelp()
 	);	
 }
 
+static struct option long_options[] = {
+	{"help", no_argument, 0, 'h'},
+	{"from", required_argument, 0, 'f'},
+	{"to", required_argument, 0, 't'},
+	{"format", required_argument, 0, 'p'},
+	{"host", required_argument, 0, 'a'},
+	{"only-open",  no_argument, 0, 'o'},
+	{0, 0, 0, 0}
+};
+
 void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 {
 	int opt = -1;
 
-	while( ( opt = getopt( argc, argv, "hf:t:a:op:" ) ) != -1 )
+	while( ( opt = getopt_long( argc, argv, "hf:t:a:op:", long_options, &opt) ) != -1 )
 	{
 		switch( opt )
 		{
@@ -91,6 +101,7 @@ void AppConfig_parseCommandLine( AppConfig *appConfig, int argc, char **argv )
 				}
 				break;
 			case 'h':
+			case '?':
 				AppConfig_showHelp();
 				exit( 0 );
 				break;
