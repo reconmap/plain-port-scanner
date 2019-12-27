@@ -32,11 +32,9 @@ void printOpenClosed(const struct ThreadOutData *outData)
 	const char *color =
 	    outData->isOpen ? COLOR(1, 37, 42) : COLOR(1, 37, 41);
 
-	const char *format = outData->serviceName ?
-	    "Port %d (%s) is %s%s%s\n" : "Port %d %s is %s%s%s\n";
-	printf(format,
+	printf("%5d | %s%10s%s | %s\n",
 	       outData->port,
-	       outData->serviceName,
-	       color,
-	       (outData->isOpen ? "OPEN" : "CLOSED"), COLOR_RESET_STRING);
+	       color, (outData->isOpen ? "OPEN" : "CLOSED"), COLOR_RESET_STRING,
+	       (outData->serviceName ? outData->serviceName : "")
+	      );
 }

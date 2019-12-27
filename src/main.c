@@ -99,6 +99,11 @@ int main(int argc, char **argv)
 	}
 	free(inData);
 
+	if (FORMAT_PLUSES_MINUSES != appConfig.printFormat) {
+		printf("%-5s | %s%-10s%s | %s\n", "Port", "", "Status", "", "Description");
+		printf("-----------------------------------\n");
+	}
+
 	for (i = 0; i < numPorts; i++) {
 		void (*printFunction) (const struct ThreadOutData *) =
 		    printOpenClosed;

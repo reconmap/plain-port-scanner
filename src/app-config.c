@@ -56,7 +56,7 @@ void AppConfig_showHelp()
 	       "\t-t Upper bound port number (default: %d)\n"
 	       "\t-a Target host name or address (default: %s)\n"
 	       "\t-o Show only open ports (default: false)\n"
-	       "\t-p Show minuses and pluses instead of green/red\n"
+	       "\t-p (pluses-minuses|table) Show minuses and pluses instead of green/red\n"
 	       "\t-h Help\n",
 	       programName,
 	       DefaultFromPort, DefaultToPort, DefaultTargetHost);
