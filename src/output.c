@@ -34,7 +34,8 @@ void printOpenClosed(const struct ThreadOutData *outData)
 
 	printf("%5d | %s%10s%s | %s\n",
 	       outData->port,
-	       color, (outData->isOpen ? "OPEN" : "CLOSED"), COLOR_RESET_STRING,
+	       color, (outData->isOpen ? "OPEN" : "CLOSED"),
+	       COLOR_RESET_STRING,
 	       (outData->serviceName ? outData->serviceName : "")
-	      );
+	    );
 }

@@ -75,8 +75,7 @@ int main(int argc, char **argv)
 		unsigned int i = 0;
 		for (i = 0; i < appConfig.numThreads; i++) {
 			if (currentPort <= appConfig.toPort) {
-				inData[i] =
-				    (struct ThreadInData *)
+				inData[i] = (struct ThreadInData *)
 				    malloc(sizeof(struct ThreadInData));
 				memset(inData[i], 0,
 				       sizeof(struct ThreadInData));
@@ -100,7 +99,8 @@ int main(int argc, char **argv)
 	free(inData);
 
 	if (FORMAT_PLUSES_MINUSES != appConfig.printFormat) {
-		printf("%-5s | %s%-10s%s | %s\n", "Port", "", "Status", "", "Description");
+		printf("%-5s | %s%-10s%s | %s\n", "Port", "", "Status", "",
+		       "Description");
 		printf("-----------------------------------\n");
 	}
 
