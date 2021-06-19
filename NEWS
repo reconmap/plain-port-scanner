@@ -1,5 +1,6 @@
 NEWS
 
+2021-07: Manual page added.
 2017-06: Docker image.
 2015-04: OSX support.
 2014-12: Command line -h/--help command added and other minor improvements.

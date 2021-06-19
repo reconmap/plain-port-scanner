@@ -1,0 +1,27 @@
+.\" Manpage for plain-port-scanner.
+.TH man 1 "19 June 2021" "1.0" "plain-port-scanner man page"
+.SH NAME
+plain-port-scanner \- scan target ports 
+.SH SYNOPSIS
+plain-port-scanner [-f 80] [-t 8080] [-a target] [-o] [-p] [-h]
+.SH DESCRIPTION
+.B plain-port-scanner
+is a simple port scanner. Its purpose is to report a list of open/closed ports.
+.SH OPTIONS
+-f Lower bound port number (default: 1)
+
+-t Upper bound port number (default: 80)
+
+-a Target host name or address (default: localhost)
+
+-o Show only open ports (default: false)
+
+-p (pluses-minuses|table) Show minuses and pluses instead of green/red
+
+-h Help
+.SH SEE ALSO
+nmap(1)
+.SH BUGS
+No known bugs.
+.SH AUTHOR
+Santiago Lizardo (https://github.com/santiagolizardo)
