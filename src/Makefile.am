@@ -1,7 +1,7 @@
 
 bin_PROGRAMS = plain-port-scanner
 plain_port_scanner_SOURCES = main.c output.c app-config.c network.c threads.c timer.c  
-plain_port_scanner_CFLAGS = -pedantic-errors -Wall -O2 -std=gnu99
+plain_port_scanner_CFLAGS = -pedantic-errors -Wall -O2 -std=gnu17
 plain_port_scanner_LDADD = -lpthread
 plain_port_scanner_LDFLAGS =
 
