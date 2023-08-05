@@ -17,6 +17,8 @@
  */
 #include "timer.h"
 
+struct TimerConfig timerConfig;
+
 /**
  * Records the start time.
  */

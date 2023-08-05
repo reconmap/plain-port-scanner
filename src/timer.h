@@ -26,7 +26,9 @@
 struct TimerConfig {
 	time_t beginTime;
 	time_t endTime;
-} timerConfig;
+};
+
+extern struct TimerConfig timerConfig;
 
 /**
  * Records the start time.
